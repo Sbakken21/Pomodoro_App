@@ -2,18 +2,21 @@ import kivy
 import time
 
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
+from kivy.uix.widget import Widget
 
-class PomoGridLayout(GridLayout):
-    pass
+class Widgets(Widget):
+    def get_count(self):
+        count = 1500
+        self.minutes, self.seconds = divmod(count, 60)
+        return ('%d:%02d' % (self.minutes, self.seconds))
 
 class PomodoroApp(App):
     def build(self):
-        return PomoGridLayout()
+        return Widgets()
+
 
 
 class Timer(Widget):
-    
-
+    pass    
 
 PomodoroApp().run()
