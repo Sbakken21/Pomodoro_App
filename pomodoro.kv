@@ -2,8 +2,8 @@
 
 <Widgets>:
     Label:
-        id: display_time
-        text: root.countdown()
+        
+        text: root.display_time()
         color: 1,1,1,1
         pos: 350,400
         font_size: 80
@@ -14,7 +14,7 @@
         text: "Start"
         color: 0,1,0,1
         font_size: 40
-        on_press: root.countdown()
+        on_press: root.update()
     Button:
         size: 100, 75
         pos: 100, 0

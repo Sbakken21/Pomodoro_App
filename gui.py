@@ -6,7 +6,17 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 class Widgets(Widget):
+    count = 65
+    minutes, seconds = divmod(count,60)
 
+
+    def display_time(self):
+        #print( '%d:%02d' % (self.minutes, self.seconds))
+        return '%d:%02d' % (self.minutes, self.seconds)
+
+    def update(self):
+        self.seconds = self.seconds -1
+        self.display_time()
 
 
     def get_count(self):
