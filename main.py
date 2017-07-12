@@ -1,34 +1,53 @@
-import kivy
-import time #used to run program every second
-
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
+from kivy.clock import Clock
+from kivy.properties import ObjectProperty
+
+class Timer:
+    
+    work_time = 1500
+    break_time = 300
+    display_time = ObjectProperty(None)
+    timer_On = False
 
 
-class PomoGridLayout(Gridlayout):
-    pass
+    # Function to start the timer
+    def start_timer(self):
+        Clock.schedule_interval(self.update, 1)
+        self.timer_On = True
 
-class Clock:
-    #Converts the seconds into minutes:seconds format
-    def convertSec(self):
-        count = int(input('Enter the amount of time in seconds: '))
-        self.minutes, self.seconds = divmod(count, 60)
-        # print('%d:%02d' % (minutes,seconds))
-        # return (minutes, seconds)
+    # Function to stop the timer
+    def stop_timer(self):
+        self.timer_On = False
+    
+    def reset_timer(self):
+        pass
 
-    #Countdown using minutes:seconds from convertSec function
-    def countdown(self):
-        #print("%d:%02d" % (self.minutes, self.seconds)) <-- Shows the starting time 
-        for self.minutes in range(self.minutes, -1, -1):
-            while self.seconds > 0:
-                self.seconds -= 1
-                print("%d:%02d" % (self.minutes, self.seconds), end='\r')
-                time.sleep(1)
-            self.seconds = 60
-        print('Work time is up')
-                
+    
 
-   
-foo = Clock()
-foo.convertSec()
-foo.countdown()
+    # Function to count the time remaining
+    def time_remaining(self):
+        pass
+    
+class PomoLayout(BoxLayout):
+
+    displayLabel = ObjectProperty(None)
+    
+    def display_time(self):
+        self.displayLabel.text='25555'
+
+    def start_button(self):
+        pass
+    
+    def stop_button(self):
+        pass
+
+    def reset_button(self):
+        pass
+
+
+class PomoApp(App):
+    def build(self):
+        return PomoLayout()
+
+PomoApp().run()

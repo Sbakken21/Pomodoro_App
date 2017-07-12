@@ -1,0 +1,33 @@
+<PomoLayout>:
+    orientation: 'vertical'
+    
+    padding: 10
+    spacing: 10
+
+    displayLabel:display_label
+    
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+
+        Label:
+            id: display_label
+            text:"25:00"
+            font_size: 100
+            
+
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+        Button:
+            text: "Start"
+            size_hint_x: 15
+            on_press: root.display_time()
+        Button:
+            text: "Stop"
+            size_hint_x: 15
+            on_press: root.display_time()
+        Button:
+            text: "Reset"
+            size_hint_x: 15
+            on_press: root.reset_button()
