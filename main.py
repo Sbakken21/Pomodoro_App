@@ -10,6 +10,10 @@ class Timer:
     display_time = ObjectProperty(None)
     timer_On = False
 
+    # Function to convert time into minutes and seconds
+    def time_convert(self):
+        minutes, seconds = divmod(self.work_time, 60)
+        return (minutes, seconds)
 
     # Function to start the timer
     def start_timer(self):
@@ -31,10 +35,12 @@ class Timer:
     
 class PomoLayout(BoxLayout):
 
+    timer = Timer()
     displayLabel = ObjectProperty(None)
     
     def display_time(self):
-        self.displayLabel.text='25555'
+        (mins, secs) = self.timer.time_convert()
+        self.displayLabel.text= str('%d:%02d' % (mins, secs))
 
     def start_button(self):
         pass
