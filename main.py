@@ -2,58 +2,66 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
+from kivy.uix.widget import Widget
 
-class Timer:
+class Timer(Widget):
     
-    work_time = 1500
+    work_time = 300
+    default = 300
     break_time = 300
-    display_time = ObjectProperty(None)
     timer_On = False
 
     # Function to convert time into minutes and seconds
     def time_convert(self):
-        minutes, seconds = divmod(self.work_time, 60)
-        return (minutes, seconds)
+        self.minutes, self.seconds = divmod(self.work_time, 60)
+        return ("%d:%02d" % (self.minutes, self.seconds))
 
     # Function to start the timer
     def start_timer(self):
-        Clock.schedule_interval(self.update, 1)
         self.timer_On = True
+        print('Timer is currently running') #REMOVE THIS LINE WHEN DONE TESTING
 
     # Function to stop the timer
     def stop_timer(self):
         self.timer_On = False
-    
+        
+    # this should go back to the 'default' display
     def reset_timer(self):
-        pass
-
+        self.timer_On = False
+        self.work_time = self.default 
     
-
-    # Function to count the time remaining
-    def time_remaining(self):
-        pass
+class PomoLayout(Widget):
     
-class PomoLayout(BoxLayout):
-
     timer = Timer()
     displayLabel = ObjectProperty(None)
-    
-    def display_time(self):
-        (mins, secs) = self.timer.time_convert()
-        self.displayLabel.text= str('%d:%02d' % (mins, secs))
+
+    def default_display(self):
+        return str(self.timer.time_convert())
+
 
     def start_button(self):
-        pass
+        self.timer.start_timer()
     
     def stop_button(self):
-        pass
+        self.timer.stop_timer()
 
     def reset_button(self):
-        pass
+        self.timer.reset_timer()
+        self.displayLabel.text = self.default_display()
+
+    def update(self, *args, **kwargs):
+        if self.timer.timer_On and self.timer.work_time > 0:
+            self.timer.work_time -= 1
+            self.displayLabel.text = self.timer.time_convert()
+        elif self.timer.work_time == 0:
+            self.timer.timer_On = False
+            self.displayLabel.text = 'Time is Up!!!'
 
 
 class PomoApp(App):
     def build(self):
-        return PomoLayout()
+        layout = PomoLayout()
+        Clock.schedule_interval(layout.update, 1)
+        return layout
 
 PomoApp().run()

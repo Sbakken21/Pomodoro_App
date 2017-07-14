@@ -1,33 +1,38 @@
 <PomoLayout>:
-    orientation: 'vertical'
-    
-    padding: 10
-    spacing: 10
 
-    displayLabel:display_label
-    
+
+    displayLabel:displayLabel
+
+    Label:
+        text: "Test Pomodoro App"
+        center_x: root.width/2
+        top:root.top
+
+    Label:
+        id:displayLabel
+        text: root.default_display()
+        font_size: 200
+        center_x:root.width/2
+        center_y:root.height/1.5
+
     BoxLayout:
-        size_hint_y: None
-        height: "40dp"
 
-        Label:
-            id: display_label
-            text: 'Insert time here'
-            font_size: 100
-            
+        height: 50
+        width: root.width/2
+        center_x: root.width/2
+        center_y: root.height/5
+        spacing: 20
 
-    BoxLayout:
-        size_hint_y: None
-        height: "40dp"
         Button:
-            text: "Start"
-            size_hint_x: 15
-            on_press: root.display_time()
+            text: 'Start'
+            background_color: 0, 1, 0, 1
+            on_press: root.start_button()
+
         Button:
-            text: "Stop"
-            size_hint_x: 15
-            on_press: root.display_time()
+            text: 'Stop'
+            background_color: 1, 0, 0, 1
+            on_press: root.stop_button()
+
         Button:
-            text: "Reset"
-            size_hint_x: 15
+            text: 'Reset'
             on_press: root.reset_button()
