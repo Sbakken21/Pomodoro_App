@@ -6,9 +6,10 @@ from kivy.uix.widget import Widget
 
 class Timer(Widget):
     
-    work_time = 300
-    default = 300
-    break_time = 300
+    work_time = 15
+    default = 15
+    break_time = 5
+    cycle = ['w', 'b', 'w', 'lb']
     timer_On = False
 
     # Function to convert time into minutes and seconds
@@ -35,27 +36,48 @@ class PomoLayout(Widget):
     timer = Timer()
     displayLabel = ObjectProperty(None)
 
+    def setup(self):
+        self.timer.work_time = self.timer.default
+        self.btn_default()
+
     def default_display(self):
         return str(self.timer.time_convert())
 
+    def btn_default(self):
+        self.main_btn.text = 'Start'
+        self.main_btn.background_color = (0,1,0,1)
+
 
     def start_button(self):
-        self.timer.start_timer()
+        if self.timer.timer_On == True:
+            self.btn_default()
+            self.timer.stop_timer()
+        else: 
+            self.main_btn.text = 'Pause'
+            self.main_btn.background_color = (1,1,0,1)
+            self.timer.start_timer()
     
-    def stop_button(self):
-        self.timer.stop_timer()
+    def break_button(self):
+        pass
 
     def reset_button(self):
+        self.reset.disabled = True
         self.timer.reset_timer()
         self.displayLabel.text = self.default_display()
+        self.btn_default()
+ 
 
     def update(self, *args, **kwargs):
         if self.timer.timer_On and self.timer.work_time > 0:
+            self.reset.disabled = False
             self.timer.work_time -= 1
+            print(self.timer.work_time)
             self.displayLabel.text = self.timer.time_convert()
         elif self.timer.work_time == 0:
             self.timer.timer_On = False
             self.displayLabel.text = 'Time is Up!!!'
+            self.setup()
+
 
 
 class PomoApp(App):

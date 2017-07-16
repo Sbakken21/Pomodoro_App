@@ -2,6 +2,8 @@
 
 
     displayLabel:displayLabel
+    main_btn:main_btn
+    reset:reset
 
     Label:
         text: "Test Pomodoro App"
@@ -11,7 +13,7 @@
     Label:
         id:displayLabel
         text: root.default_display()
-        font_size: 200
+        font_size: 100
         center_x:root.width/2
         center_y:root.height/1.5
 
@@ -24,15 +26,19 @@
         spacing: 20
 
         Button:
+            text: 'Break'
+            background_color: 0, 1, 2, 1
+            on_press: root.break_button()
+
+        Button:
+            id: main_btn
             text: 'Start'
             background_color: 0, 1, 0, 1
             on_press: root.start_button()
 
         Button:
-            text: 'Stop'
+            id: reset
+            text: 'Stop/Reset'
             background_color: 1, 0, 0, 1
-            on_press: root.stop_button()
-
-        Button:
-            text: 'Reset'
+            disabled: True
             on_press: root.reset_button()
