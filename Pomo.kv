@@ -1,14 +1,27 @@
 <PomoLayout>:
 
-
+    cycleLabel:cycleLabel
     displayLabel:displayLabel
+    statusLabel:statusLabel
     main_btn:main_btn
     reset:reset
 
     Label:
-        text: "Test Pomodoro App"
+        text: 'Task goes here'
         center_x: root.width/2
+        top:root.top/2
+
+    Label:
+        id: cycleLabel
+        text: 'Completed Cycles: 0'
+        center_x: root.width/1.2
         top:root.top
+        
+    Label:
+        id: statusLabel
+        text: 'Status: ' + root.timer.sequence[root.timer.cycle] 
+        center_x: root.width/2
+        top:root.top/1.5
 
     Label:
         id:displayLabel
@@ -26,7 +39,7 @@
         spacing: 20
 
         Button:
-            text: 'Break'
+            text: 'Skip'
             background_color: 0, 1, 2, 1
             on_press: root.break_button()
 
