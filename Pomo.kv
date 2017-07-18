@@ -6,6 +6,30 @@
     main_btn:main_btn
     reset:reset
 
+    BoxLayout:   
+        height: 50
+        width: root.width
+        top: root.top
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'Pomodoro App'
+                    with_previous: False 
+                ActionOverflow:
+                    ActionButton:
+                        text: "Settings"
+                        on_press: app.open_settings()
+
+                    ActionButton:
+                        text: "Tasks"
+                        
+                    ActionButton:
+                        text: "Statistics"
+
+                    ActionButton:
+                        text: "About"
+
+
     Label:
         text: 'Task goes here'
         center_x: root.width/2
@@ -13,9 +37,9 @@
 
     Label:
         id: cycleLabel
-        text: 'Completed Cycles: 0'
-        center_x: root.width/1.2
-        top:root.top
+        text: 'Completed Cycles: 0/4'
+        center_x: root.width/1.15
+        center_y: root.top * 0.85
         
     Label:
         id: statusLabel
@@ -38,20 +62,21 @@
         center_y: root.height/5
         spacing: 20
 
+
         Button:
             text: 'Skip'
             background_color: 0, 1, 2, 1
-            on_press: root.break_button()
+            on_press: root.break_button(), root.timer_alarm.stop()
 
         Button:
             id: main_btn
             text: 'Start'
             background_color: 0, 1, 0, 1
-            on_press: root.start_button()
+            on_press: root.start_button(), root.timer_alarm.stop()
 
         Button:
             id: reset
             text: 'Stop/Reset'
             background_color: 1, 0, 0, 1
             disabled: True
-            on_press: root.reset_button()
+            on_press: root.reset_button(), root.timer_alarm.stop()
