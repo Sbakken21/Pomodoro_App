@@ -77,9 +77,11 @@ class PomoLayout(Widget):
         else:
             self.cycleLabel.text = 'Completed Cycles: ' + str(self.timer.pomo_count) + '/4'
             self.timer.work_time = self.timer.long_break
-        self.start_button()
-        # self.btn_default()
-        # self.cycle_display()
+        if self.timer.timer_On == False:
+            self.btn_default()
+        else:
+            self.main_btn.text = 'Pause'
+            self.main_btn.background_color = (1,1,0,1)
         
     # The default time on the timer
     def default_display(self):
@@ -96,7 +98,7 @@ class PomoLayout(Widget):
 
 
     def start_button(self):
-        if self.timer.timer_On == True:
+        if self.timer.timer_On:
             self.btn_default()
             self.timer.stop_timer()
         else: 
@@ -106,7 +108,7 @@ class PomoLayout(Widget):
     
     def break_button(self):
         #self.timer.cycle += 1
-        self.timer.timer_On = False
+        self.timer.timer_On = True
         self.check_cycle()
 
     def reset_button(self):
