@@ -5,6 +5,7 @@ from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.core.audio import SoundLoader
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 class Timer():
     
@@ -55,7 +56,7 @@ class PomoLayout(Widget):
     # Checks at end of timer to see how many cycles are completed 
     def check_cycle(self):
         # self.timer_alarm = SoundLoader.load('Resources/screamingsun.mp3')
-        if self.timer.cycle < 7:
+        if self.timer.cycle < 7:    # in the future, change this to len(sequence) in order to make it adjustable in the settings
             self.timer.cycle += 1
         else:
             self.timer.cycle = 0
@@ -70,13 +71,14 @@ class PomoLayout(Widget):
             self.timer.pomo_count += 1
             if self.timer.pomo_count == 4:
                 self.timer.pomo_count = 0
-                
         elif self.timer.sequence[self.timer.cycle] == 'Break':
             self.cycleLabel.text = 'Completed Cycles: ' + str(self.timer.pomo_count) + '/4'
             self.timer.work_time = self.timer.break_time
         else:
+            self.cycleLabel.text = 'Completed Cycles: ' + str(self.timer.pomo_count) + '/4'
             self.timer.work_time = self.timer.long_break
-        self.btn_default()
+        self.start_button()
+        # self.btn_default()
         # self.cycle_display()
         
     # The default time on the timer
@@ -103,9 +105,9 @@ class PomoLayout(Widget):
             self.timer.start_timer()
     
     def break_button(self):
-        self.timer.cycle += 1
-        self.timer.timer_On = True
-        self.setup()
+        #self.timer.cycle += 1
+        self.timer.timer_On = False
+        self.check_cycle()
 
     def reset_button(self):
         self.reset.disabled = True
@@ -127,7 +129,8 @@ class PomoLayout(Widget):
             self.displayLabel.text = 'Time is Up!!!' # change this for different cycle stuff
             self.check_cycle()
 ###########################################################################################################
-
+class test(Widget):
+    pass
 
 
 class PomoApp(App):
