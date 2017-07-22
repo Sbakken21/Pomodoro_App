@@ -1,11 +1,11 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.core.audio import SoundLoader
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.lang import Builder
 
 class Timer():
     
@@ -131,14 +131,20 @@ class PomoLayout(Widget):
             self.displayLabel.text = 'Time is Up!!!' # change this for different cycle stuff
             self.check_cycle()
 ###########################################################################################################
-class test(Widget):
+
+class MainScreen(Screen):
     pass
 
+class TasksScreen(Screen):
+    pass
+
+# Allows for screen switching
+presentation = Builder.load_file("Pomo.kv")
 
 class PomoApp(App):
     def build(self):
         layout = PomoLayout()
         Clock.schedule_interval(layout.update, 1)
-        return layout
+        return presentation
 
 PomoApp().run()

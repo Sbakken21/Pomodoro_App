@@ -22,6 +22,7 @@
 
                     ActionButton:
                         text: "Tasks"
+                        on_press: app.root.current = "tasks"
                         
                     ActionButton:
                         text: "Statistics"
@@ -83,3 +84,15 @@
 
 ########################################################################
 
+ScreenManager:
+    MainScreen:
+    TasksScreen:
+
+<MainScreen>:
+    name: "main"
+    PomoLayout
+
+<TasksScreen>:
+    name: "tasks"
+    Label:
+        text: 'testing'
