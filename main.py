@@ -1,150 +1,159 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty #REMOVE LIST PROPERTY IF NOT USED
 from kivy.uix.widget import Widget
 from kivy.core.audio import SoundLoader
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.uix.listview import ListItemButton
+from kivy.uix.popup import Popup
 from kivy.lang import Builder
 
-class Timer():
-    
-    work_time, default = 10, 10
-    break_time = 5
-    long_break = 15
-    sequence = ['Work', 'Break', 'Work', 'Break', 'Work', 'Break', 'Work', 'Long Break']
-    cycle = 0
-    pomo_count = 1
-    timer_On = False
 
-    # Function to convert time into minutes and seconds
-    def time_convert(self):
-        self.minutes, self.seconds = divmod(self.work_time, 60)
-        return ("%d:%02d" % (self.minutes, self.seconds))
+class Timer(Widget):
+	work_time, default = 1500, 1500
+	break_time = 300
+	long_break = 900
+	sequence = ['Work', 'Break', 'Work', 'Break', 'Work', 'Break', 'Work', 'Long Break']
+	cycle = 0
+	pomo_count = 1
+	timer_On = False
+	timer_alarm = SoundLoader.load('Resources/screamingsun.mp3')
 
-    # Function to start the timer
-    def start_timer(self):
-        self.timer_On = True
-        print('Timer is currently running') #REMOVE THIS LINE WHEN DONE TESTING
+	def __init__(self, **kwargs):
+		super(Timer, self).__init__(**kwargs)
+		Clock.schedule_interval(self.update, 1)
 
-    # Function to stop the timer
-    def stop_timer(self):
-        self.timer_On = False
-        
-    # this should go back to the 'default' display and reset all counts
-    def reset_timer(self):
-        self.cycle = 0
-        self.pomo_count = 1
-        self.timer_On = False
-        self.work_time = self.default 
+	#Function to convert time into minutes and seconds
+	def time_convert(self):
+		self.minutes, self.seconds = divmod(self.work_time, 60)
+		return str("%d:%02d" %(self.minutes, self.seconds))
 
-    def break_timer(self):
-        self.cycle += 1
-        # if self.sequence != 'Long Break' or 'Work':
-        #     self.work_time = self.break_time
-        # else:
-        #     self.work_time = self.long_break     # THIS NEEDS TO BE ADJUSTED, FOR W, B, AND LB (CURRENTLY SET UP ONLY FOR TESTING)
-    
-class PomoLayout(Widget):
-    
-    timer = Timer()
-    displayLabel = ObjectProperty(None)
-    cycleLabel = ObjectProperty(None)
-    
-    timer_alarm = SoundLoader.load('Resources/screamingsun.mp3')
+	#Function to start timer
+	def start_timer(self):
+		self.timer_On = True
+	
+	#Function to stop timer
+	def stop_timer(self):
+		self.timer_On = False
 
-    # Checks at end of timer to see how many cycles are completed 
-    def check_cycle(self):
-        # self.timer_alarm = SoundLoader.load('Resources/screamingsun.mp3')
-        if self.timer.cycle < 7:    # in the future, change this to len(sequence) in order to make it adjustable in the settings
-            self.timer.cycle += 1
-        else:
-            self.timer.cycle = 0
-        self.setup()
+	# Restore timer to default settings
+	def reset_timer(self):
+		self.cycle = 0
+		self.pomo_count = 1
+		self.timer_On = False
+		self.work_time = self.default
 
-    # Based on number of cycles determines the "Status" of the timer
-    def setup(self):
-        self.timer_alarm.play()
-        self.statusLabel.text = str('Status: ' + self.timer.sequence[self.timer.cycle])
-        if self.timer.sequence[self.timer.cycle] == 'Work':
-            self.timer.work_time = self.timer.default
-            self.timer.pomo_count += 1
-            if self.timer.pomo_count == 4:
-                self.timer.pomo_count = 0
-        elif self.timer.sequence[self.timer.cycle] == 'Break':
-            self.cycleLabel.text = 'Completed Cycles: ' + str(self.timer.pomo_count) + '/4'
-            self.timer.work_time = self.timer.break_time
-        else:
-            self.cycleLabel.text = 'Completed Cycles: ' + str(self.timer.pomo_count) + '/4'
-            self.timer.work_time = self.timer.long_break
-        if self.timer.timer_On == False:
-            self.btn_default()
-        else:
-            self.main_btn.text = 'Pause'
-            self.main_btn.background_color = (1,1,0,1)
-        
-    # The default time on the timer
-    def default_display(self):
-        return str(self.timer.time_convert())
+	# Checks for number of completed cycles
+	def check_cycle(self):
+		if self.cycle < 7:
+			self.cycle += 1
+		else:
+			self.cycle = 0
+		self.setup()
 
-    # The default cycle_display MAYBE DELETE THIS IF IT ISNT BEING USED
-    def cycle_display(self):
-        print('Count: ' + str(self.timer.pomo_count))
-        return 'Completed cycles: ' + str(self.timer.pomo_count)
+	# Determines if that "Status" of the timer is work/break/long break
+	def setup(self):
+		self.timer_alarm.play()
+		self.statusLabel.text = str('Status: ' + self.sequence[self.cycle])
+		if self.sequence[self.cycle] == 'Work':
+			self.work_time = self.default
+			self.pomo_count += 1
+			if self.pomo_count == 4:
+				self.pomo_count = 0
+		elif self.sequence[self.cycle] == 'Break':
+			self.cycleLabel.text = 'Completed Cycles: ' + str(self.pomo_count) + '/4'
+			self.work_time = self.break_time
+		else:
+			self.cycleLabel.text = 'Completed Cycles: ' + str(self.pomo_count) + '/4'
+			self.work_time = self.long_break
+		if self.timer_On == False:
+			self.btn_default()
+		else:
+			self.pause_default()
 
-    def btn_default(self):
-        self.main_btn.text = 'Start'
-        self.main_btn.background_color = (0,1,0,1)
+	# Default style of the Pause Button
+	def pause_default(self):
+		self.main_btn.text = 'Pause'
+		self.main_btn.background_color = (1,1,0,1)
+
+	# Default style of Start Button
+	def btn_default(self):
+		self.main_btn.text = "Start"
+		self.main_btn.background_color = (0,1,0,1)
+
+	# Start/Pause Button
+	def start_button(self):
+		if self.timer_On:
+			self.btn_default()
+			self.stop_timer()
+		else:
+			self.pause_default()
+			self.start_timer()
+
+	# Button to skip to next cycle
+	def break_button(self):
+		self.timer_On = True
+		self.check_cycle()
+
+	# Button to reset all timer values back to default
+	def reset_button(self):
+		self.reset.disabled = True
+		self.reset_timer()
+		self.displayLabel.text = str(self.time_convert())
+		self.cycleLabel.text = "Completed Cycles: 0/4"
+		self.statusLabel.text = "Status: Work"
+		self.btn_default()
+
+	def update(self, *args, **kwargs):
+		if self.timer_On and self.work_time > 0:
+			self.reset.disabled = False
+			self.work_time -= 1
+			self.displayLabel.text = self.time_convert()
+		elif self.work_time == 0:
+			self.timer_On = False
+			self.displayLabel.text = "Time is Up!!!"
+			self.check_cycle()
 
 
-    def start_button(self):
-        if self.timer.timer_On:
-            self.btn_default()
-            self.timer.stop_timer()
-        else: 
-            self.main_btn.text = 'Pause'
-            self.main_btn.background_color = (1,1,0,1)
-            self.timer.start_timer()
-    
-    def break_button(self):
-        #self.timer.cycle += 1
-        self.timer.timer_On = True
-        self.check_cycle()
 
-    def reset_button(self):
-        self.reset.disabled = True
-        self.timer.reset_timer()
-        self.displayLabel.text = self.default_display()
-        self.cycleLabel.text = 'Completed Cycles: 0/4'
-        self.statusLabel.text = 'Status: Work'
-        self.btn_default()
- 
 
-    def update(self, *args, **kwargs):
-        if self.timer.timer_On and self.timer.work_time > 0:
-            self.reset.disabled = False
-            self.timer.work_time -= 1
-            print(self.timer.work_time) # REMOVE THIS CODE LATER
-            self.displayLabel.text = self.timer.time_convert()
-        elif self.timer.work_time == 0:
-            self.timer.timer_On = False
-            self.displayLabel.text = 'Time is Up!!!' # change this for different cycle stuff
-            self.check_cycle()
-###########################################################################################################
 
-class MainScreen(Screen):
-    pass
+class TaskButton(ListItemButton):
+	pass
+	
+class TaskLayout(BoxLayout):
+	task_input = ObjectProperty()
+	task_list = ObjectProperty()
 
-class TasksScreen(Screen):
-    pass
+	def add_task(self):
+		if self.task_input.text != "":
+			self.task_list.adapter.data.extend([self.task_input.text])
+			self.task_list._trigger_reset_populate()
+		else:
+			pass
 
-# Allows for screen switching
-presentation = Builder.load_file("Pomo.kv")
+	def del_task(self):
+		if self.task_list.adapter.selection:
+			selection = self.task_list.adapter.selection[0].text
+			self.task_list.adapter.data.remove(selection)
+			self.task_list._trigger_reset_populate()
+
+class TimerScreen(Screen):
+	pass
+
+class TaskScreen(Screen):
+	
+	def open_popup(self):
+		popup = TaskPopup()
+		popup.open()
+
+class Manager(ScreenManager):
+	pass
 
 class PomoApp(App):
-    def build(self):
-        layout = PomoLayout()
-        Clock.schedule_interval(layout.update, 1)
-        return presentation
+	def build(self):
+		pass
 
-PomoApp().run()
+if __name__ == '__main__':
+	PomoApp().run()

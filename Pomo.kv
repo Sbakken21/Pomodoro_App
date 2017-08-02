@@ -1,7 +1,10 @@
-<PomoLayout>:
+#: import main main
+#: import ListItemButton kivy.uix.listview.ListItemButton
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
 
-    cycleLabel:cycleLabel
+<Timer>:
     displayLabel:displayLabel
+    cycleLabel:cycleLabel
     statusLabel:statusLabel
     main_btn:main_btn
     reset:reset
@@ -18,11 +21,11 @@
                 ActionOverflow:
                     ActionButton:
                         text: "Settings"
-                        on_press: app.open_settings()
+                        on_release: app.open_settings()
 
                     ActionButton:
                         text: "Tasks"
-                        on_press: app.root.current = "tasks"
+                        on_release: app.root.current = "tasks"
                         
                     ActionButton:
                         text: "Statistics"
@@ -44,13 +47,13 @@
         
     Label:
         id: statusLabel
-        text: 'Status: ' + root.timer.sequence[root.timer.cycle] 
+        text: 'Status: ' + root.sequence[root.cycle] 
         center_x: root.width/2
         top:root.top/1.5
 
     Label:
         id:displayLabel
-        text: root.default_display()
+        text: root.time_convert()
         font_size: 100
         center_x:root.width/2
         center_y:root.height/1.5
@@ -67,32 +70,90 @@
         Button:
             text: 'Skip'
             background_color: 0, 1, 2, 1
-            on_press: root.break_button(), root.timer_alarm.stop()
+            on_release: root.break_button(), root.timer_alarm.stop()
 
         Button:
             id: main_btn
             text: 'Start'
             background_color: 0, 1, 0, 1
-            on_press: root.start_button(), root.timer_alarm.stop()
+            on_release: root.start_button(), root.timer_alarm.stop()
 
         Button:
             id: reset
             text: 'Stop/Reset'
             background_color: 1, 0, 0, 1
             disabled: True
-            on_press: root.reset_button(), root.timer_alarm.stop()
+            on_release: root.reset_button(), root.timer_alarm.stop()
 
-########################################################################
+###########################################################################
+<TaskLayout>:
+    orientation: "vertical"
+    task_input: task_input_view
+    task_list: tasks_list_view
 
-ScreenManager:
-    MainScreen:
-    TasksScreen:
+    BoxLayout:
+        size_hint_y: .1
+        height: "10dp"
 
-<MainScreen>:
-    name: "main"
-    PomoLayout
+        TextInput:
+            id: task_input_view
+            font_size: 20
+            size_hint_x: 70
+            multiline: False
+            
 
-<TasksScreen>:
+        Button:
+            text: "Add"
+            on_release: root.add_task()
+            size_hint_x: 15
+
+        Button:
+            text: "Del"
+            on_release: root.del_task()
+            size_hint_x: 15
+
+    ListView:
+        id: tasks_list_view
+        adapter:
+            ListAdapter(data=[], cls=main.TaskButton)
+
+#########################################################################
+Manager:
+    TimerScreen:
+    TaskScreen:
+###########################################################################
+<TimerScreen>:
+    name: "timer"
+    Timer
+###################################################################################
+
+<TaskScreen>:
     name: "tasks"
-    Label:
-        text: 'testing'
+    
+    TaskLayout
+        pos_hint: {'top':.92}
+
+    ActionBar:
+        pos_hint: {'top':1}
+        ActionView:
+            ActionPrevious:
+                title: 'Tasks'
+                with_previous: False 
+
+            ActionButton:
+                text: 'Back'
+                on_press: root.manager.current = "timer"
+
+            ActionOverflow:
+                ActionButton:
+                    text: "Settings"
+                    on_press: app.open_settings()
+                    
+                ActionButton:
+                    text: "Statistics"
+
+                ActionButton:
+                    text: "About"
+
+##################################################################################        
+
