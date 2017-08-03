@@ -143,10 +143,7 @@ class TimerScreen(Screen):
 	pass
 
 class TaskScreen(Screen):
-	
-	def open_popup(self):
-		popup = TaskPopup()
-		popup.open()
+	pass
 
 class Manager(ScreenManager):
 	pass
