@@ -8,12 +8,24 @@
     statusLabel:statusLabel
     main_btn:main_btn
     reset:reset
+    
+    canvas.before:
+        Color:
+            rgba: 245/255, 245/255, 245/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    BoxLayout:
+        orientation: 'vertical'
+        
 
-    BoxLayout: 
-        height: 50
-        width: root.width
-        top: root.top
+        size: self.parent.size
+        pos: self.parent.pos 
+
         ActionBar:
+            background_image: 'Resources/white-bg.png'
+            background_color: 30/255, 144/255, 255/255, 1
             ActionView:
                 ActionPrevious:
                     title: 'Pomodoro App'
@@ -33,63 +45,71 @@
                     ActionButton:
                         text: "About"
 
+        Label:
+            id:displayLabel
+            text: root.time_convert()
+            font_size: 100
+            color: 30/255, 144/255, 255/255, 1
 
-    Label:
-        text: 'Task goes here'
-        center_x: root.width/2
-        top:root.top/2
+        Label:
+            id: statusLabel
+            text: 'Status: ' + root.sequence[root.cycle] 
+            color: 30/255,144/255,255/255,1
 
-    Label:
-        id: cycleLabel
-        text: 'Completed Cycles: 0/4'
-        center_x: root.width/1.15
-        center_y: root.top * 0.85
+        Label:
+            text: 'Task goes here'
+            color: 30/255, 144/255, 255/255,1
+
+        Label:
+            id: cycleLabel
+            text: 'Completed Cycles: 0/4'
+            color: 30/255, 144/255, 255/255,1
+            font_color: ''
         
-    Label:
-        id: statusLabel
-        text: 'Status: ' + root.sequence[root.cycle] 
-        center_x: root.width/2
-        top:root.top/1.5
+        ## KIVY MAIN BUTTONS
+        BoxLayout:
 
-    Label:
-        id:displayLabel
-        text: root.time_convert()
-        font_size: 100
-        center_x:root.width/2
-        center_y:root.height/1.5
+            size: 210, 70
+            size_hint: None, None
+            pos: 200,200
 
-    BoxLayout:
+            Button:
 
-        height: 50
-        width: root.width/2
-        center_x: root.width/2
-        center_y: root.height/5
-        spacing: 20
+                on_release: root.break_button(), root.timer_alarm.stop()
+                background_normal: './Resources/skip_test.png'
+                background_down: './Resources/skip_test.png'
+
+            Button:
+                id: main_btn
+
+                pos: 200, 200
+
+                on_release: root.start_button(), root.timer_alarm.stop()
+                background_normal: './Resources/test.png'
+                background_down: './Resources/test.png'
 
 
-        Button:
-            text: 'Skip'
-            background_color: 0, 1, 2, 1
-            on_release: root.break_button(), root.timer_alarm.stop()
+            Button:
+                id: reset
 
-        Button:
-            id: main_btn
-            text: 'Start'
-            background_color: 0, 1, 0, 1
-            on_release: root.start_button(), root.timer_alarm.stop()
-
-        Button:
-            id: reset
-            text: 'Stop/Reset'
-            background_color: 1, 0, 0, 1
-            disabled: True
-            on_release: root.reset_button(), root.timer_alarm.stop()
+                disabled: True
+                on_release: root.reset_button(), root.timer_alarm.stop()
+                background_disabled_normal: ''
+                background_normal: './Resources/skip_test.png'
+                background_down: './Resources/test.png'
 
 ###########################################################################
 <TaskLayout>:
     orientation: "vertical"
     task_input: task_input_view
     task_list: tasks_list_view
+
+    canvas.before:
+        Color:
+            rgba: 245/255, 245/255, 245/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     BoxLayout:
         size_hint_y: .1
@@ -103,6 +123,7 @@
             
 
         Button:
+        
             text: "Add"
             on_release: root.add_task()
             size_hint_x: 15
@@ -134,6 +155,8 @@ Manager:
         pos_hint: {'top':.92}
 
     ActionBar:
+        background_image: 'Resources/white-bg.png'
+        background_color: 30/255, 144/255, 255/255, 1
         pos_hint: {'top':1}
         ActionView:
             ActionPrevious:
