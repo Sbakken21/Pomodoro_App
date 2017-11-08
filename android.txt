@@ -1,3 +1,0 @@
-title=Pomodoro App
-author=Skyler Bakken
-orientation=landscape
