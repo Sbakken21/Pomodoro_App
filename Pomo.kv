@@ -32,26 +32,20 @@
                     with_previous: False 
                 ActionOverflow:
                     ActionButton:
-                        text: "Settings"
-                        on_release: app.open_settings()
-
-                    ActionButton:
                         text: "Tasks"
                         on_release: app.root.current = "tasks"
-
-                    ActionButton:
-                        text: "About"
 
         Label:
             id:displayLabel
             text: root.time_convert()
-            font_size: 100
+            font_size: 120
             color: 30/255, 144/255, 255/255, 1
 
         Label:
             id: statusLabel
             text: 'Status: ' + root.sequence[root.cycle] 
             color: 30/255,144/255,255/255,1
+            font_size: 25
 
         Label:
             text: ''
@@ -62,25 +56,21 @@
             text: 'Completed Cycles: 0/4'
             color: 30/255, 144/255, 255/255,1
             font_color: ''
+            font_size: 25
         
         ## KIVY MAIN BUTTONS
         BoxLayout:
-
-            size: 210, 70
-            size_hint: None, None
-            pos: 200,200
+            orientation: 'horizontal'
+            spacing: 10
+            size_hint: 1, .8
 
             Button:
-
                 on_release: root.break_button(), root.timer_alarm.stop()
                 background_normal: './Resources/skip_test.png'
                 background_down: './Resources/skip_test.png'
 
             Button:
                 id: main_btn
-
-                pos: 200, 200
-
                 on_release: root.start_button(), root.timer_alarm.stop()
                 background_normal: './Resources/test.png'
                 background_down: './Resources/test.png'
@@ -88,12 +78,11 @@
 
             Button:
                 id: reset
-
                 disabled: True
                 on_release: root.reset_button(), root.timer_alarm.stop()
-                background_disabled_normal: ''
-                background_normal: './Resources/skip_test.png'
-                background_down: './Resources/test.png'
+                background_disabled_normal: './Resources/reset_disabled.png'
+                background_normal: './Resources/reset.png'
+                background_down: './Resources/reset.png'
 
 ###########################################################################
 <TaskLayout>:
@@ -163,17 +152,6 @@ Manager:
             ActionButton:
                 text: 'Back'
                 on_press: root.manager.current = "timer"
-
-            ActionOverflow:
-                ActionButton:
-                    text: "Settings"
-                    on_press: app.open_settings()
-                    
-                ActionButton:
-                    text: "Statistics"
-
-                ActionButton:
-                    text: "About"
 
 ##################################################################################        
 
