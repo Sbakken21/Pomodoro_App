@@ -115,6 +115,7 @@ class Timer(Widget):
             self.reset.disabled = False
             self.work_time -= 1
             self.displayLabel.text = self.time_convert()
+            self.displayLabel.font_size = "120"
         elif self.work_time == 0:
             self.timer_On = False
             self.displayLabel.text = "Time is Up!!!"
